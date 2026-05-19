@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UNARV Thiruvalla — KVCM Hall Roofing Fund</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* ============ DESIGN TOKENS ============ */
+    :root {
+      --bg: #f6f1e8;
+      --bg-elev: #fbf7ef;
+      --ink: #1f1b16;
+      --ink-soft: #5b524a;
+      --ink-muted: #8a8079;
+      --line: #e3d9c7;
+      --accent: #8a3324;       /* deep terracotta */
+      --accent-soft: #c46a4e;
+      --gold: #b08a3e;
+      --green: #4a6b3a;
+      --danger: #a14b3b;
+      --shadow-sm: 0 1px 2px rgba(31, 27, 22, 0.04);
+      --shadow-md: 0 10px 30px -12px rgba(31, 27, 22, 0.18);
+      --radius: 14px;
+      --font-serif: 'Fraunces', Georgia, serif;
+      --font-sans: 'Inter', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+      min-height: 100vh;
+      /* Subtle paper texture */
+      background-image:
+        radial-gradient(circle at 20% 10%, rgba(176, 138, 62, 0.06), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(138, 51, 36, 0.05), transparent 45%);
+    }
+
+    /* ============ HEADER ============ */
+    .site-header {
+      border-bottom: 1px solid var(--line);
+      background: var(--bg-elev);
+      padding: 18px 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(8px);
+      background-color: rgba(251, 247, 239, 0.85);
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--bg-elev);
+      display: grid; place-items: center;
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 17px;
+      letter-spacing: -0.01em;
+    }
+    .brand-text p {
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .header-cta {
+      display: flex; gap: 10px; align-items: center;
+    }
+    .live-dot {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--ink-soft);
+    }
+    .live-dot::before {
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 0 0 rgba(74, 107, 58, 0.5);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(74, 107, 58, 0.5); }
+      70%  { box-shadow: 0 0 0 8px rgba(74, 107, 58, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(74, 107, 58, 0); }
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px;
+      font-family: var(--font-sans); font-size: 14px; font-weight: 500;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--accent); color: var(--bg-elev); }
+    .btn-primary:hover { background: #6f291d; transform: translateY(-1px); }
+
+    /* ============ HERO ============ */
+    .hero {
+      padding: 56px 0 32px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .hero h2 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      max-width: 780px;
+      margin: 0 auto 18px;
+    }
+    .hero h2 em {
+      font-style: italic;
+      color: var(--accent);
+      font-weight: 400;
+    }
+    .hero p {
+      color: var(--ink-soft);
+      max-width: 580px;
+      margin: 0 auto;
+      font-size: 16px;
+    }
+
+    /* ============ PROGRESS BAR ============ */
+    .progress-section {
+      max-width: 720px;
+      margin: 40px auto 0;
+      padding: 24px 28px;
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+    .progress-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
+    }
+    .progress-header .label {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .progress-header .pct {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+    .progress-track {
+      height: 10px;
+      background: var(--bg);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-soft), var(--accent));
+      border-radius: 999px;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .progress-meta {
+      display: flex; justify-content: space-between;
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    /* ============ SUMMARY CARDS ============ */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin: 40px 0;
+    }
+
+    .card {
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--card-accent, var(--accent));
+    }
+
+    .card .card-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+      margin-bottom: 12px;
+    }
+    .card .card-value {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .card .card-sub {
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin-top: 6px;
+    }
+
+    .card.pledged   { --card-accent: var(--gold); }
+    .card.received  { --card-accent: var(--green); }
+    .card.expenses  { --card-accent: var(--danger); }
+    .card.balance   { --card-accent: var(--accent); }
+
+    /* ============ CHARTS ROW ============ */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 860px) {
+      .charts-row { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+    .panel h3 {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+    .panel .panel-sub {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-bottom: 20px;
+    }
+    .chart-wrap { position: relative; height: 280px; }
+
+    /* ============ RECENT DONATIONS ============ */
+    .donations-list { list-style: none; }
+    .donations-list li {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--line);
+      gap: 12px;
+    }
+    .donations-list li:last-child { border-bottom: none; }
+    .donor-name { font-weight: 500; font-size: 14px; }
+    .donor-mode { font-size: 12px; color: var(--ink-muted); }
+    .donor-amount {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .empty-state {
+      text-align: center; padding: 30px 10px;
+      color: var(--ink-muted); font-size: 14px; font-style: italic;
+    }
+
+    /* ============ LOADING & STATES ============ */
+    .skeleton {
+      display: inline-block;
+      background: linear-gradient(90deg, var(--line), #ede4d2, var(--line));
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 6px;
+      color: transparent !important;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--ink); color: var(--bg-elev);
+      padding: 12px 22px; border-radius: 999px;
+      font-size: 13px; box-shadow: var(--shadow-md);
+      opacity: 0; transition: all 0.3s ease;
+      z-index: 100;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ============ FOOTER ============ */
+    .site-footer {
+      border-top: 1px solid var(--line);
+      padding: 30px 0;
+      margin-top: 40px;
+      text-align: center;
+      color: var(--ink-muted);
+      font-size: 13px;
+    }
+    .site-footer .updated { font-style: italic; }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 600px) {
+      .hero { padding: 36px 0 20px; }
+      .card { padding: 20px; }
+      .card .card-value { font-size: 26px; }
+      .panel { padding: 20px; }
+      .progress-section { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========== HEADER =========== -->
+  <header class="site-header">
+    <div class="container header-row">
+      <div class="brand">
+        <div class="brand-mark">U</div>
+        <div class="brand-text">
+          <h1>UNARV Thiruvalla</h1>
+          <p>KVCM Hall Roofing Fund</p>
+        </div>
+      </div>
+      <div class="header-cta">
+        <span class="live-dot">Live</span>
+        <a href="pledge.html" class="btn btn-primary">Make a Pledge</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========== HERO =========== -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">Community Fundraiser · 2026</div>
+      <h2>Restoring our hall, <em>one roof at a time</em>.</h2>
+      <p>Every contribution is recorded openly so our community can see exactly how the funds are pledged, received, and spent.</p>
+
+      <!-- Progress -->
+      <div class="progress-section">
+        <div class="progress-header">
+          <span class="label">Toward our goal</span>
+          <span class="pct" id="goalPct">—</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="goalFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="goalRaised">Raised: —</span>
+          <span id="goalTarget">Goal: —</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========== MAIN =========== -->
+  <main class="container">
+
+    <!-- Summary Cards -->
+    <section class="summary" id="summaryCards">
+      <div class="card pledged">
+        <div class="card-label">Total Pledged</div>
+        <div class="card-value skeleton" id="totalPledged">000000</div>
+        <div class="card-sub" id="pledgeCount">—</div>
+      </div>
+      <div class="card received">
+        <div class="card-label">Donations Received</div>
+        <div class="card-value skeleton" id="totalDonated">000000</div>
+        <div class="card-sub" id="donationCount">—</div>
+      </div>
+      <div class="card expenses">
+        <div class="card-label">Total Expenses</div>
+        <div class="card-value skeleton" id="totalExpenses">000000</div>
+        <div class="card-sub" id="expenseCount">—</div>
+      </div>
+      <div class="card balance">
+        <div class="card-label">Remaining Balance</div>
+        <div class="card-value skeleton" id="balance">000000</div>
+        <div class="card-sub">Received minus expenses</div>
+      </div>
+    </section>
+
+    <!-- Charts -->
+    <section class="charts-row">
+      <div class="panel">
+        <h3>Funds Overview</h3>
+        <p class="panel-sub">A comparison of pledged, received, and spent amounts</p>
+        <div class="chart-wrap"><canvas id="overviewChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Expenses by Category</h3>
+        <p class="panel-sub">Where the money has been allocated</p>
+        <div class="chart-wrap"><canvas id="categoryChart"></canvas></div>
+      </div>
+    </section>
+
+    <!-- Recent Donations -->
+    <section class="panel" style="margin-bottom: 40px;">
+      <h3>Recent Donations</h3>
+      <p class="panel-sub">The last 5 contributions received</p>
+      <ul class="donations-list" id="recentDonations">
+        <li class="empty-state">Loading recent contributions…</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- =========== FOOTER =========== -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>UNARV Thiruvalla · KVCM Hall Roofing Maintenance Fund · Maintained transparently for the community</p>
+      <p class="updated" id="lastUpdated">Last updated: —</p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- =========== SCRIPTS =========== -->
+  <script>
+    // ========== CONFIGURATION ==========
+    // Replace with your deployed Apps Script Web App URL
+    const API_URL = 'https://script.google.com/macros/s/AKfycbx4vLB0PtFoefOi_NQMr3v-N9JGTeXyfqiyy4uSVj3BkOs87MMLVvq5t7ltEYTfX0g/exec';
+    const REFRESH_INTERVAL = 45000; // 45 seconds
+    const CURRENCY = '₹';
+
+    // ========== UTILITIES ==========
+    const $ = (id) => document.getElementById(id);
+
+    const formatCurrency = (n) => {
+      const num = Number(n) || 0;
+      return CURRENCY + num.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    };
+
+    const formatDate = (iso) => {
+      try {
+        const d = new Date(iso);
+        return d.toLocaleString('en-IN', {
+          day: 'numeric', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        });
+      } catch { return ''; }
+    };
+
+    const showToast = (msg) => {
+      const t = $('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    };
+
+    // ========== CHART INSTANCES (cached) ==========
+    let overviewChart, categoryChart;
+
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.color = '#5b524a';
+    Chart.defaults.borderColor = '#e3d9c7';
+
+    function renderOverviewChart(data) {
+      const ctx = $('overviewChart').getContext('2d');
+      const config = {
+        type: 'bar',
+        data: {
+          labels: ['Pledged', 'Received', 'Expenses', 'Balance'],
+          datasets: [{
+            data: [data.totalPledged, data.totalDonated, data.totalExpenses, Math.max(0, data.balance)],
+            backgroundColor: ['#b08a3e', '#4a6b3a', '#a14b3b', '#8a3324'],
+            borderRadius: 8,
+            barThickness: 38
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { callback: (v) => formatCurrency(v) },
+              grid: { color: '#e3d9c7' }
+            },
+            x: { grid: { display: false } }
+          }
+        }
+      };
+
+      if (overviewChart) { overviewChart.data = config.data; overviewChart.update(); }
+      else overviewChart = new Chart(ctx, config);
+    }
+
+    function renderCategoryChart(catObj) {
+      const ctx = $('categoryChart').getContext('2d');
+      const labels = Object.keys(catObj || {});
+      const values = Object.values(catObj || {});
+
+      if (!labels.length) {
+        // Render a placeholder doughnut
+        labels.push('No expenses yet');
+        values.push(1);
+      }
+
+      const palette = ['#8a3324', '#b08a3e', '#4a6b3a', '#c46a4e', '#5b524a', '#a14b3b'];
+
+      const config = {
+        type: 'doughnut',
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: palette.slice(0, labels.length),
+            borderColor: '#fbf7ef',
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '62%',
+          plugins: {
+            legend: { position: 'bottom', labels: { padding: 14, boxWidth: 10, boxHeight: 10, usePointStyle: true } },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ctx.label === 'No expenses yet' ? 'No expenses yet' : `${ctx.label}: ${formatCurrency(ctx.parsed)}`
+              }
+            }
+          }
+        }
+      };
+
+      if (categoryChart) { categoryChart.data = config.data; categoryChart.update(); }
+      else categoryChart = new Chart(ctx, config);
+    }
+
+    // ========== DOM UPDATES ==========
+    function clearSkeletons() {
+      document.querySelectorAll('.skeleton').forEach(el => el.classList.remove('skeleton'));
+    }
+
+    function updateSummary(d) {
+      $('totalPledged').textContent  = formatCurrency(d.totalPledged);
+      $('totalDonated').textContent  = formatCurrency(d.totalDonated);
+      $('totalExpenses').textContent = formatCurrency(d.totalExpenses);
+      $('balance').textContent       = formatCurrency(d.balance);
+
+      $('pledgeCount').textContent   = `${d.pledgeCount || 0} pledge${d.pledgeCount === 1 ? '' : 's'}`;
+      $('donationCount').textContent = `${d.donationCount || 0} donation${d.donationCount === 1 ? '' : 's'}`;
+      $('expenseCount').textContent  = `${d.expenseCount || 0} expense entr${d.expenseCount === 1 ? 'y' : 'ies'}`;
+
+      // Goal progress
+      const pct = d.goalProgressPct || 0;
+      $('goalPct').textContent = pct.toFixed(1) + '%';
+      $('goalFill').style.width = pct + '%';
+      $('goalRaised').textContent = `Raised: ${formatCurrency(d.totalDonated)}`;
+      $('goalTarget').textContent = `Goal: ${formatCurrency(d.goalAmount)}`;
+
+      clearSkeletons();
+    }
+
+    function updateRecent(donations) {
+      const list = $('recentDonations');
+      if (!donations || !donations.length) {
+        list.innerHTML = '<li class="empty-state">Be the first to contribute.</li>';
+        return;
+      }
+
+      list.innerHTML = donations.map(d => `
+        <li>
+          <div>
+            <div class="donor-name">${escapeHtml(d.name || 'Anonymous')}</div>
+            <div class="donor-mode">${escapeHtml(d.paymentMode || '—')} · ${formatDate(d.timestamp)}</div>
+          </div>
+          <div class="donor-amount">${formatCurrency(d.amount)}</div>
+        </li>
+      `).join('');
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    // ========== DATA FETCH ==========
+    async function loadDashboard() {
+      try {
+        const res = await fetch(`${API_URL}?action=summary&t=${Date.now()}`);
+        if (!res.ok) throw new Error('Network response was not OK');
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+
+        updateSummary(data);
+        updateRecent(data.recentDonations);
+        renderOverviewChart(data);
+        renderCategoryChart(data.expenseByCategory);
+
+        $('lastUpdated').textContent = 'Last updated: ' + formatDate(data.generatedAt);
+      } catch (err) {
+        console.error('Dashboard load failed:', err);
+        showToast('Could not refresh data. Retrying soon…');
+      }
+    }
+
+    // ========== INIT ==========
+    loadDashboard();
+    setInterval(loadDashboard, REFRESH_INTERVAL);
+  </script>
+</body>
+</html>

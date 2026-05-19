@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Make a Pledge — UNARV Thiruvalla</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --bg-elev: #fbf7ef;
+      --ink: #1f1b16;
+      --ink-soft: #5b524a;
+      --ink-muted: #8a8079;
+      --line: #e3d9c7;
+      --accent: #8a3324;
+      --accent-soft: #c46a4e;
+      --green: #4a6b3a;
+      --danger: #a14b3b;
+      --shadow-sm: 0 1px 2px rgba(31, 27, 22, 0.04);
+      --shadow-md: 0 10px 30px -12px rgba(31, 27, 22, 0.18);
+      --radius: 14px;
+      --font-serif: 'Fraunces', Georgia, serif;
+      --font-sans: 'Inter', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(circle at 15% 20%, rgba(176, 138, 62, 0.08), transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(138, 51, 36, 0.06), transparent 45%);
+    }
+
+    .site-header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(251, 247, 239, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 18px 0;
+    }
+    .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+    .header-row {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--accent); color: var(--bg-elev);
+      display: grid; place-items: center;
+      font-family: var(--font-serif); font-weight: 700; font-size: 18px;
+    }
+    .brand-text h1 { font-family: var(--font-serif); font-weight: 600; font-size: 17px; }
+    .brand-text p {
+      font-size: 12px; color: var(--ink-muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .back-link {
+      font-size: 13px; color: var(--ink-soft);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    /* ============ FORM CARD ============ */
+    .page {
+      padding: 56px 0 80px;
+    }
+    .form-intro {
+      text-align: center; margin-bottom: 32px;
+    }
+    .eyebrow {
+      font-size: 12px; text-transform: uppercase;
+      letter-spacing: 0.18em; color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .form-intro h2 {
+      font-family: var(--font-serif);
+      font-weight: 500; font-size: clamp(28px, 5vw, 42px);
+      line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 12px;
+    }
+    .form-intro h2 em { font-style: italic; color: var(--accent); font-weight: 400; }
+    .form-intro p {
+      color: var(--ink-soft); max-width: 480px; margin: 0 auto;
+    }
+
+    .form-card {
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 36px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .field { margin-bottom: 22px; }
+    .field label {
+      display: block;
+      font-size: 13px; font-weight: 500;
+      margin-bottom: 8px; color: var(--ink-soft);
+    }
+    .field label .optional {
+      font-weight: 400; color: var(--ink-muted);
+      font-style: italic; margin-left: 4px;
+    }
+    .field input, .field textarea {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--bg);
+      font-family: var(--font-sans); font-size: 15px;
+      color: var(--ink);
+      transition: all 0.2s ease;
+    }
+    .field input:focus, .field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--bg-elev);
+      box-shadow: 0 0 0 3px rgba(138, 51, 36, 0.1);
+    }
+    .field textarea { resize: vertical; min-height: 90px; }
+
+    .field .input-prefix {
+      position: relative;
+    }
+    .field .input-prefix span {
+      position: absolute; left: 16px; top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-serif); font-size: 16px;
+      color: var(--ink-muted); pointer-events: none;
+    }
+    .field .input-prefix input { padding-left: 30px; }
+
+    .field-error {
+      display: none;
+      color: var(--danger);
+      font-size: 12px; margin-top: 6px;
+    }
+    .field.has-error input,
+    .field.has-error textarea { border-color: var(--danger); }
+    .field.has-error .field-error { display: block; }
+
+    .preset-amounts {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-top: 10px;
+    }
+    .preset-amounts button {
+      padding: 6px 14px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      border-radius: 999px;
+      font-family: var(--font-sans); font-size: 13px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .preset-amounts button:hover {
+      border-color: var(--accent); color: var(--accent);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 15px 24px;
+      background: var(--accent); color: var(--bg-elev);
+      border: none; border-radius: 999px;
+      font-family: var(--font-sans); font-size: 15px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-submit:hover:not(:disabled) {
+      background: #6f291d; transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(251, 247, 239, 0.3);
+      border-top-color: var(--bg-elev);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+    .spinner.active { display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .trust-note {
+      margin-top: 18px; padding: 14px;
+      background: var(--bg); border-radius: 10px;
+      font-size: 12px; color: var(--ink-muted);
+      text-align: center; line-height: 1.5;
+    }
+
+    /* ============ SUCCESS STATE ============ */
+    .success-state {
+      display: none;
+      text-align: center; padding: 30px 10px;
+    }
+    .success-state.show { display: block; animation: fadeIn 0.5s ease; }
+    .success-icon {
+      width: 64px; height: 64px;
+      background: var(--green); color: var(--bg-elev);
+      border-radius: 50%;
+      display: grid; place-items: center;
+      margin: 0 auto 20px;
+      font-size: 32px;
+      animation: pop 0.5s ease;
+    }
+    @keyframes pop {
+      0% { transform: scale(0); }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .success-state h3 {
+      font-family: var(--font-serif); font-size: 26px;
+      font-weight: 500; margin-bottom: 8px;
+    }
+    .success-state p { color: var(--ink-soft); margin-bottom: 24px; }
+    .success-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn-secondary {
+      padding: 12px 22px;
+      background: transparent; color: var(--ink);
+      border: 1px solid var(--line); border-radius: 999px;
+      font-family: var(--font-sans); font-size: 14px; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-primary {
+      padding: 12px 22px;
+      background: var(--accent); color: var(--bg-elev);
+      border: none; border-radius: 999px;
+      font-family: var(--font-sans); font-size: 14px; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: #6f291d; }
+
+    @media (max-width: 600px) {
+      .form-card { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <div class="brand">
+        <div class="brand-mark">U</div>
+        <div class="brand-text">
+          <h1>UNARV Thiruvalla</h1>
+          <p>KVCM Hall · Pledge Form</p>
+        </div>
+      </div>
+      <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="container">
+
+      <div class="form-intro">
+        <div class="eyebrow">Stand with UNARV Thiruvalla</div>
+        <h2>Pledge your <em>support</em>.</h2>
+        <p>Your pledge is a promise that helps us plan the work ahead. Every contribution, however modest, brings us closer to our goal.</p>
+      </div>
+
+      <div class="form-card">
+
+        <!-- FORM -->
+        <form id="pledgeForm" novalidate>
+
+          <div class="field" id="field-name">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" autocomplete="name" maxlength="80" required />
+            <div class="field-error">Please enter your name.</div>
+          </div>
+
+          <div class="field" id="field-phone">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel" maxlength="20" pattern="[0-9+\-\s]*" required />
+            <div class="field-error">Please enter a valid phone number.</div>
+          </div>
+
+          <div class="field" id="field-amount">
+            <label for="amount">Amount Pledged</label>
+            <div class="input-prefix">
+              <span>₹</span>
+              <input type="number" id="amount" name="amount" min="1" step="1" required inputmode="numeric" />
+            </div>
+            <div class="field-error">Please enter a valid amount greater than zero.</div>
+            <div class="preset-amounts">
+              <button type="button" data-amount="5000">₹5,000</button>
+              <button type="button" data-amount="10000">₹10,000</button>
+              <button type="button" data-amount="50000">₹50,000</button>
+              <button type="button" data-amount="100000">₹1,00,000</button>
+            </div>
+          </div>
+
+          <div class="field" id="field-message">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" maxlength="500" placeholder="A blessing, a prayer, or a word of encouragement…" required></textarea>
+            <div class="field-error">Please share a brief message.</div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <span class="spinner" id="spinner"></span>
+            <span id="btnText">Submit Pledge</span>
+          </button>
+
+          <div class="trust-note">
+            🔒 Your details are recorded confidentially and only used for fund tracking.
+            Pledges are non-binding — you may fulfill them at your convenience.
+          </div>
+        </form>
+
+        <!-- SUCCESS -->
+        <div class="success-state" id="successState">
+          <div class="success-icon">✓</div>
+          <h3>Thank you, <span id="successName">friend</span>.</h3>
+          <p>Your pledge of <strong id="successAmount">—</strong> has been recorded.<br>May the Lord bless your generosity.</p>
+          <div class="success-actions">
+            <button type="button" class="btn-secondary" id="anotherBtn">Submit Another Pledge</button>
+            <a href="dashboard.html" class="btn-primary">View Dashboard</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ========== CONFIGURATION ==========
+    // Replace with your deployed Apps Script Web App URL
+    const API_URL = 'https://script.google.com/macros/s/AKfycbx4vLB0PtFoefOi_NQMr3v-N9JGTeXyfqiyy4uSVj3BkOs87MMLVvq5t7ltEYTfX0g/exec';
+
+    // ========== ELEMENTS ==========
+    const form = document.getElementById('pledgeForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btnText');
+    const successState = document.getElementById('successState');
+
+    // ========== PRESET AMOUNT BUTTONS ==========
+    document.querySelectorAll('.preset-amounts button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('amount').value = btn.dataset.amount;
+        document.getElementById('field-amount').classList.remove('has-error');
+      });
+    });
+
+    // ========== VALIDATION ==========
+    function validateForm(data) {
+      let valid = true;
+      // Clear previous errors
+      ['field-name', 'field-phone', 'field-amount', 'field-message'].forEach(id => {
+        document.getElementById(id).classList.remove('has-error');
+      });
+
+      // Name — required, min 2 chars
+      if (!data.name || data.name.trim().length < 2) {
+        document.getElementById('field-name').classList.add('has-error');
+        valid = false;
+      }
+
+      // Phone — required, 7–15 digits after stripping non-numeric
+      const phoneClean = (data.phone || '').replace(/[^0-9]/g, '');
+      if (!data.phone || phoneClean.length < 7 || phoneClean.length > 15) {
+        document.getElementById('field-phone').classList.add('has-error');
+        valid = false;
+      }
+
+      // Amount — required, positive number
+      const amount = parseFloat(data.amount);
+      if (isNaN(amount) || amount <= 0) {
+        document.getElementById('field-amount').classList.add('has-error');
+        valid = false;
+      }
+
+      // Message — required, min 2 chars
+      if (!data.message || data.message.trim().length < 2) {
+        document.getElementById('field-message').classList.add('has-error');
+        valid = false;
+      }
+
+      return valid;
+    }
+
+    // ========== SUBMIT HANDLER ==========
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = {
+        type: 'pledge',
+        name:    document.getElementById('name').value.trim(),
+        phone:   document.getElementById('phone').value.trim(),
+        amount:  document.getElementById('amount').value,
+        message: document.getElementById('message').value.trim()
+      };
+
+      if (!validateForm(formData)) return;
+
+      // UI: loading state
+      submitBtn.disabled = true;
+      spinner.classList.add('active');
+      btnText.textContent = 'Submitting…';
+
+      try {
+        // Use form-urlencoded body to avoid CORS preflight on Apps Script
+        const body = new URLSearchParams(formData).toString();
+
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body
+        });
+
+        const result = await res.json();
+
+        if (!result.success) {
+          throw new Error(result.error || 'Submission failed');
+        }
+
+        // Show success state
+        document.getElementById('successName').textContent = formData.name.split(' ')[0];
+        document.getElementById('successAmount').textContent =
+          '₹' + Number(formData.amount).toLocaleString('en-IN');
+
+        form.style.display = 'none';
+        document.querySelector('.trust-note').style.display = 'none';
+        successState.classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      } catch (err) {
+        console.error(err);
+        alert('We could not submit your pledge: ' + err.message + '\n\nPlease try again or contact the committee.');
+      } finally {
+        submitBtn.disabled = false;
+        spinner.classList.remove('active');
+        btnText.textContent = 'Submit Pledge';
+      }
+    });
+
+    // ========== ANOTHER PLEDGE ==========
+    document.getElementById('anotherBtn').addEventListener('click', () => {
+      form.reset();
+      form.style.display = 'block';
+      document.querySelector('.trust-note').style.display = 'block';
+      successState.classList.remove('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
