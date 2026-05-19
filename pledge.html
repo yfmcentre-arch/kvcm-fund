@@ -304,9 +304,8 @@
           </div>
 
           <div class="field" id="field-message">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" maxlength="500" placeholder="A blessing, a prayer, or a word of encouragement…" required></textarea>
-            <div class="field-error">Please share a brief message.</div>
+            <label for="message">Message <span class="optional">(optional)</span></label>
+            <textarea id="message" name="message" maxlength="500" placeholder="A blessing, a prayer, or a word of encouragement…"></textarea>
           </div>
 
           <button type="submit" class="btn-submit" id="submitBtn">
@@ -359,7 +358,7 @@
     function validateForm(data) {
       let valid = true;
       // Clear previous errors
-      ['field-name', 'field-phone', 'field-amount', 'field-message'].forEach(id => {
+      ['field-name', 'field-phone', 'field-amount'].forEach(id => {
         document.getElementById(id).classList.remove('has-error');
       });
 
@@ -380,12 +379,6 @@
       const amount = parseFloat(data.amount);
       if (isNaN(amount) || amount <= 0) {
         document.getElementById('field-amount').classList.add('has-error');
-        valid = false;
-      }
-
-      // Message — required, min 2 chars
-      if (!data.message || data.message.trim().length < 2) {
-        document.getElementById('field-message').classList.add('has-error');
         valid = false;
       }
 

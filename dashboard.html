@@ -450,9 +450,9 @@
       </div>
     </section>
 
-    <!-- Recent Donations -->
+    <!-- Recent Contributions -->
     <section class="panel" style="margin-bottom: 40px;">
-      <h3>Recent Donations</h3>
+      <h3>Recent Contributions</h3>
       <p class="panel-sub">The last 5 contributions received</p>
       <ul class="donations-list" id="recentDonations">
         <li class="empty-state">Loading recent contributions…</li>
@@ -618,10 +618,11 @@
         return;
       }
 
-      list.innerHTML = donations.map(d => `
+      // Anonymize: most recent contribution shown as "Contribution 1"
+      list.innerHTML = donations.map((d, idx) => `
         <li>
           <div>
-            <div class="donor-name">${escapeHtml(d.name || 'Anonymous')}</div>
+            <div class="donor-name">Contribution ${idx + 1}</div>
             <div class="donor-mode">${escapeHtml(d.paymentMode || '—')} · ${formatDate(d.timestamp)}</div>
           </div>
           <div class="donor-amount">${formatCurrency(d.amount)}</div>
